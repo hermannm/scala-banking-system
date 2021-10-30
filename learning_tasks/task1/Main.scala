@@ -6,4 +6,12 @@ object Task1 extends App {
   }
 
   println(array);
+
+  def fibonacci(n: Int): BigInt = {
+    if (n <= 1)
+      return n
+    fibonacci(n-1) + fibonacci(n-2)
+  }
+
+  println(s"Fibonacci number 100 is ${fibonacci(100)}")
 }
