@@ -22,4 +22,16 @@ object Task1 extends App {
   }
 
   println(sumIntegerArray(createIntegerArray()));
+
+  def recursiveSumIntegerArray(array: Array[Int]): Int = {
+    if (array.length == 0) {
+      return 0;
+    }
+
+    return array(0) + recursiveSumIntegerArray(
+      array.slice(1, array.length)
+    );
+  }
+
+  println(recursiveSumIntegerArray(createIntegerArray));
 }
