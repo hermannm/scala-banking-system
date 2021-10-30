@@ -9,13 +9,15 @@ object Task2 extends App {
 
   def increaseCounter(): Unit = counter += 1
 
+  def printCounter(): Unit = println(counter)
+
   def safeIncreaseCounter(): Unit = this.synchronized(increaseCounter)
 
-  def printCounter(): Unit = println(counter)
+  def safePrintCounter(): Unit = this.synchronized(printCounter)
 
   val thread1 = initializeThread(safeIncreaseCounter)
   val thread2 = initializeThread(safeIncreaseCounter)
-  val thread3 = initializeThread(printCounter)
+  val thread3 = initializeThread(safePrintCounter)
 
   thread1.start()
   thread2.start()
