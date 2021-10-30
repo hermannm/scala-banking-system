@@ -9,4 +9,3 @@ target/
 *.fdb_latexmk
 *.fls
 *.out
-*.pdf
