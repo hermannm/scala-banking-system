@@ -3,3 +3,10 @@
 project/
 target/
 .bsp/
+
+# Latex stuff
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
+*.pdf
