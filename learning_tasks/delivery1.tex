@@ -37,10 +37,13 @@ All the code for this task can be found in \verb|task1/Main.scala|.
 
 \subtask{d}
 The function \verb|fibonacci(n: Int)| gives the $n$'th fibonacci number,
-with $0$ being the zeroth, and $1$ being the first etc.
+with $0$ being the zeroth, and $1$ being the first. The rest of the seqence
+is implemented using the recursive definition of fibonacci.
 
-The function returns \verb|BigInt| because the fibonacci sequence
+The function return type is \verb|BigInt| because the fibonacci sequence
 quickly exceeds $2^{31}-1$, which is the maximum value representable as an \verb|Int|.
+A \verb|BigInt| however does not have a pre-determined range of possible integer values.
+It will allocate enough space to fit the value as it grows.
 
 \task{2}
 \textbf{Concurrency in Scala}
