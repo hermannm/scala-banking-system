@@ -1,9 +1,25 @@
 object Task1 extends App {
-  val array: Array[Int] = new Array[Int](50);
+  def createIntegerArray(): Array[Int] = {
+    val array = new Array[Int](50);
 
-  for(i <- 0 to 49) {
-    array(i) = i + 1;
+    for (index <- 0 to 49) {
+      array(index) = index + 1;
+    }
+
+    return array;
   }
 
-  println(array);
+  createIntegerArray().foreach { println };
+
+  def sumIntegerArray(array: Array[Int]): Int = {
+    var sum = 0;
+
+    for (index <- 0 to (array.length - 1)) {
+      sum += array(index);
+    }
+
+    return sum;
+  }
+
+  println(sumIntegerArray(createIntegerArray()));
 }
