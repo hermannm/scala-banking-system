@@ -13,5 +13,5 @@ object Task1 extends App {
     fibonacci(n-1) + fibonacci(n-2)
   }
 
-  println(s"Fibonacci number 100 is ${fibonacci(100)}")
+  println(s"Fibonacci number 30 is ${fibonacci(30)}")
 }
