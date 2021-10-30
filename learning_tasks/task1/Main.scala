@@ -6,7 +6,7 @@ object Task1 extends App {
       array(index) = index + 1;
     }
 
-    return array;
+    array;
   }
 
   createIntegerArray().foreach { println };
@@ -18,7 +18,7 @@ object Task1 extends App {
       sum += array(index);
     }
 
-    return sum;
+    sum;
   }
 
   println(sumIntegerArray(createIntegerArray()));
@@ -28,7 +28,7 @@ object Task1 extends App {
       return 0;
     }
 
-    return array(0) + recursiveSumIntegerArray(
+    array(0) + recursiveSumIntegerArray(
       array.slice(1, array.length)
     );
   }
