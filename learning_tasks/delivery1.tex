@@ -48,4 +48,41 @@ It will allocate enough space to fit the value as it grows.
 \task{2}
 \textbf{Concurrency in Scala}
 
+All the code for this task can be found in \verb|task2/Main.scala|.
+
+\subtask{b}
+The \verb|increaseCounter()| function and \verb|printCounter()| both use the variable \verb|counter|.
+They perform updates and reads respectivly. When we spawn 3 threads, we don't know what order
+the scheduler is going to run our threads in. Even though we have the code
+%
+\begin{verbatim}
+val thread1 = initializeThread(increaseCounter)
+val thread2 = initializeThread(increaseCounter)
+val thread3 = initializeThread(printCounter)
+
+thread1.start()
+thread2.start()
+thread3.start()
+\end{verbatim}
+%
+we sometimes get \verb|1| printed to the console. This is because \verb|printCounter()|
+can be called before the \verb|increaseCounter()| calls have done their job.
+
+Another option is that the two calls to \verb|increaseCounter()| happen on top of each other,
+in such a way that the two invocations of \verb|counter += 1| don't see the effects of each other.
+They will both read the same old value of \verb|counter|, and thus \verb|counter| is only increased by one.
+
+The possibilities of this occuring means the code is non-deterministic.
+This kind of problem is called a race condition, which is what happens when
+two threads are attempting to use the same memory address,
+at least one of the threads is writing to the address,
+and there is no \textbf{happens before}-relation between the two operations.
+
+This can be very problematic in a banking system, if several deposits are made,
+and multiple deposits work with the old balance, the resulting balance will not
+see the effects of all the deposits.
+
+We can avoid this by using syncronization atomics that create \textbf{happens before}
+relations across threads, or use locks to avoid multpiple threads ever working on the same memory at once.
+
 \end{document}
