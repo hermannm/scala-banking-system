@@ -1,5 +1,16 @@
 object Task2d extends App{
-  lazy val deadlock_list: List[String] = List("deadlock", "in", "3", "2", "1", deadlocker)
-  lazy val deadlocker: String = deadlock_list.head
-  println(deadlocker)
+  def initializeThread(function: => Unit): Thread = {
+    return new Thread {
+      override def run() = function
+    }
+  }
+  def print_deadlock(): Unit = println(deadlock_trap)
+
+  lazy val deadlock_trap: String = {
+    val worker_thread = initializeThread(print_deadlock)
+    worker_thread.start()
+    worker_thread.join()
+    "deadlock"
+  }
+  print_deadlock()
 }
