@@ -36,7 +36,7 @@
 All the code for this task can be found in \verb|task1/Main.scala|.
 
 \subtask{a}
-The \verb|createIntegerArray()| function declares a new array of 50 items, and then assigns those items to the numbers 1 to 50.
+The \verb|createIntegerArray()| function declares a new array of 50 items, and then assigns the integer values from 1 to 50 to those items.
 
 \subtask{b}
 The \verb|sumIntegerArray(array)| function declares a variable sum, then loops over the provided array of integers to sum them.
@@ -57,8 +57,8 @@ It will allocate enough space to fit the value as it grows.
 \task{2}
 \textbf{Concurrency in Scala}
 
-All the code for tasks \textbf{a}, \textbf{b} and \textbf{c} can be found in \verb|task2/task2abc/Main.scala|.
-The code for the last subtask \textbf{d} is in \verb|task2/task2d/Main.scala|.
+All the code for tasks \textbf{a}, \textbf{b} and \textbf{c} can be found in \verb|task2abc/Main.scala|.
+The code for the last subtask \textbf{d} is in \verb|task2d/Main.scala|.
 
 \subtask{a}
 The \verb|initializeThread()| function takes a function as its argument, and returns an initialized, non-started thread with the \verb|run()| method overridden by the provided function. When calling \verb|start()| on the thread later, a call will be made to this \verb|run()| function.
@@ -99,12 +99,17 @@ We can avoid this by using syncronization atomics that create \textbf{happens be
 relations across threads, or use locks to avoid multpiple threads ever working on the same memory at once.
 
 \subtask{c}
-\verb|increaseCounter()| and \verb|printCounter()| are made thread-safe through the implementation of \verb|safeIncreaseCounter()| and \verb|safePrintCounter()|, which each wrap the given functions in the \verb|this.synchronized()| function. \verb|this.synchronized()| makes sure that any variables operated on within the provided function are locked while operating on them, meaning that other functions are not allowed to operate on them at the same time. The \verb|this| part of the function call binds it to the context of the surrounding object, in this case \verb|Task2|.
+\verb|increaseCounter()| and \verb|printCounter()| are made thread-safe through the implementation of \verb|safeIncreaseCounter()| and \verb|safePrintCounter()|, which each wrap the given functions in the \verb|this.synchronized()| function. \verb|this.synchronized()| uses the \verb|this| object as a lock, preventing multiple methods from modifying internal state at once,
+or one call from modifying while another is reading.
+The \verb|this| part of the function call binds it to the context of the surrounding object, in this case the singleton \verb|Task2|.
+
+Note that this locking only prevents race conditions, it is still possible for the scheduler to call \verb|safePrintCounter()| before \verb|safeIncreaseCounter()|.
+If we wanted to avoid this, we would have to \verb|join()| width the increasing threads before starting the printing thread, but at that point there is no point in threads.
 
 \subtask{d}
 A deadlock occurs when two threads are waiting for a response from one another.
 This can be avoided by changing the order of execution, so that we are always sure that an action is finished or can be finished before or when it is required.
 
-In our implementation,a deadlock is caused by initializing a \verb|lazy| value by the main thread, and in doing so a new thread is started that prints out the value of the same lazy value. Because the double-checked locking idiom prevents multiple threads of initializesing the same lazy variable we get a deadlock, as the main thread already is trying to initialize it.
+In our implementation, a deadlock is caused by initializing a \verb|lazy| value by the main thread, and in doing so a new thread is started that prints out the value of the same lazy value. Because the double-checked locking idiom prevents multiple threads from initializesing the same lazy variable, we get a deadlock, as the main thread is already trying to initialize it.
 
 \end{document}

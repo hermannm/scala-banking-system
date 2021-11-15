@@ -9,3 +9,4 @@ target/
 *.fdb_latexmk
 *.fls
 *.out
+.auctex-auto/
