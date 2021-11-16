@@ -10,21 +10,24 @@ class TransactionQueue {
     // TODO
     // project task 1.1
     // Add datastructure to contain the transactions
+    var queued_Transactions = new mutable.Queue[Transaction]()
 
     // Remove and return the first element from the queue
-    def pop: Transaction = ???
+    def pop: Transaction = queued_Transactions.dequeue()
 
     // Return whether the queue is empty
-    def isEmpty: Boolean = ???
+    def isEmpty: Boolean = queued_Transactions.isEmpty
 
     // Add new element to the back of the queue
-    def push(t: Transaction): Unit = ???
+    def push(t: Transaction): Unit = {
+      queued_Transactions.enqueue(t)
+    }
 
     // Return the first element from the queue without removing it
-    def peek: Transaction = ???
+    def peek: Transaction = queued_Transactions.front
 
     // Return an iterator to allow you to iterate over the queue
-    def iterator: Iterator[Transaction] = ???
+    def iterator: Iterator[Transaction] = queued_Transactions.iterator
 }
 
 class Transaction(val transactionsQueue: TransactionQueue,
