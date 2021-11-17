@@ -10,7 +10,7 @@ class TransactionQueue {
     // TODO
     // project task 1.1
     // Add datastructure to contain the transactions
-    var queued_Transactions = new mutable.Queue[Transaction]()
+    var queued_Transactions = new mutable.SynchronizedQueue[Transaction]()
 
     // Remove and return the first element from the queue
     def pop: Transaction = queued_Transactions.dequeue()
