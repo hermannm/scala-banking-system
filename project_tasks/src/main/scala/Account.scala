@@ -7,11 +7,13 @@ class Account(val bank: Bank, initialBalance: Double) {
     def withdraw(amount: Double): Either[Unit, String] = this.synchronized{
         if (amount < 0) return Right("Cannot withdraw a negative amount")
         if (amount > this.getBalanceAmount) return Right("Not enough funds in account")
-        Left(balance.amount -= amount)
+        balance.amount -= amount
+        Left(())
     }
     def deposit (amount: Double): Either[Unit, String] = this.synchronized{
         if (amount < 0) return Right("You cannot deposit a negative amount")
-        Left(balance.amount += amount)
+        balance.amount += amount
+        Left(())
     }
     def getBalanceAmount: Double       = balance.amount
 

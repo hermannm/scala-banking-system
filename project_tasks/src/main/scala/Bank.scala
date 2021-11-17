@@ -15,6 +15,8 @@ class Bank(val allowedAttempts: Integer = 3) {
             allowedAttempts
         );
 
+        // Add the transaction to the queue, and start queue processing if not already running.
+        // Importantly, the processing queue can not shut down between we add and check running state.
         this.synchronized {
             transactionQueue.push(transaction)
 
@@ -29,21 +31,25 @@ class Bank(val allowedAttempts: Integer = 3) {
 
     private def processTransactions: Unit = {
         while (true) {
-            this.synchronized {
+
+            // After this synchronized block, we either have more work to do, or have shut down the thread
+            val transaction: Transaction = this.synchronized {
                 if(transactionQueue.isEmpty) {
                     processing = false
                     return
                 }
+                transactionQueue.pop
             }
-            val transaction: Transaction = transactionQueue.pop
 
-            transaction.run
-
-            if (transaction.status == TransactionStatus.PENDING) {
-                transactionQueue.push(transaction)
-            } else {
-                processedTransactions.push(transaction)
-            }            
+            transaction.status match {
+                case TransactionStatus.UNSTARTED => {
+                    new Thread(transaction).start
+                    transactionQueue.push(transaction)
+                }
+                case TransactionStatus.PENDING => transactionQueue.push(transaction)
+                case _ => processedTransactions.push(transaction)
+            }
+            Thread.sleep(1)
         }
     }
 

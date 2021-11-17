@@ -2,7 +2,7 @@ import scala.collection.mutable
 import scala.util.{Either, Left, Right}
 
 object TransactionStatus extends Enumeration {
-  val PENDING, SUCCESS, FAILED = Value
+  val UNSTARTED, PENDING, SUCCESS, FAILED = Value
 }
 
 class TransactionQueue {
@@ -36,12 +36,17 @@ class Transaction(val transactionsQueue: TransactionQueue,
                   val amount: Double,
                   val allowedAttemps: Int) extends Runnable {
 
-    var status: TransactionStatus.Value = TransactionStatus.PENDING
+    var status: TransactionStatus.Value = TransactionStatus.UNSTARTED
     var attempt = 0
 
-    override def run: Unit = this.synchronized {
+    override def run: Unit = {
+        status.synchronized {
+            if (status != TransactionStatus.UNSTARTED)
+                return
+            status = TransactionStatus.PENDING
+        }
 
-        def doTransaction(): Either[Unit, String] = {
+        def doTransaction: Either[Unit, String] = {
             from.withdraw(amount) match {
                 case Left(_) => {
                     to.deposit(amount) match {
@@ -63,10 +68,12 @@ class Transaction(val transactionsQueue: TransactionQueue,
             }
         }
 
-        // If the transaction is not yet SUCCESS or FAILED, 
-        if (status == TransactionStatus.PENDING) {
+        // If the transaction is not yet SUCCESS or FAILED, keep trying to perform it.
+        // Other transactions can complete while we wait, making our transaction evetually succeed.
+        while (status == TransactionStatus.PENDING) {
             doTransaction match {
                 case Left(_) => {
+                    println("Good");
                     status = TransactionStatus.SUCCESS
                 }
                 case error => {
@@ -75,7 +82,7 @@ class Transaction(val transactionsQueue: TransactionQueue,
                         status = TransactionStatus.FAILED
                 }
             }
-            Thread.sleep(50) // Let other transactions be added to the queue
+            Thread.sleep(50) // Let other transactions be processed while we wait
         }
     }
 }
