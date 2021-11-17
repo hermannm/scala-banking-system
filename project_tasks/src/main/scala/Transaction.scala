@@ -1,4 +1,3 @@
-import exceptions._
 import scala.collection.mutable
 import scala.util.{Either, Left, Right}
 
@@ -40,13 +39,13 @@ class Transaction(val transactionsQueue: TransactionQueue,
     var status: TransactionStatus.Value = TransactionStatus.PENDING
     var attempt = 0
 
-    override def run: Unit = synchronized(this) {
+    override def run: Unit = this.synchronized {
 
         def doTransaction(): Either[Unit, String] = {
-            match from.withdraw(amount) {
-                case Left => {
-                    match to.deposit(amount) {
-                        case Left => {
+            from.withdraw(amount) match {
+                case Left(_) => {
+                    to.deposit(amount) match {
+                        case Left(_) => {
                             // Success!
                             Left(())
                         }
@@ -66,8 +65,8 @@ class Transaction(val transactionsQueue: TransactionQueue,
 
         // If the transaction is not yet SUCCESS or FAILED, 
         if (status == TransactionStatus.PENDING) {
-            match doTransaction {
-                case Left => {
+            doTransaction match {
+                case Left(_) => {
                     status = TransactionStatus.SUCCESS
                 }
                 case error => {
