@@ -73,7 +73,6 @@ class Transaction(val transactionsQueue: TransactionQueue,
         while (status == TransactionStatus.PENDING) {
             doTransaction match {
                 case Left(_) => {
-                    println("Good");
                     status = TransactionStatus.SUCCESS
                 }
                 case error => {
