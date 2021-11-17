@@ -1,5 +1,4 @@
 import org.scalatest.FunSuite
-import exceptions._
 
 class AccountTests extends FunSuite {
 
